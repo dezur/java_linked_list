@@ -40,12 +40,12 @@ public class SinglyLinkedList<T> {
      */
     public void add(T value) {
         Link<T> newLink = new Link<>(value);
-        if(head == null) {
+        if (head == null) {
             head = newLink;
             size++;
         } else {
             Link<T> runner = head;
-            while(runner.next != null) {
+            while (runner.next != null) {
                 runner = runner.next;
             }
             runner.next = newLink;
@@ -60,7 +60,10 @@ public class SinglyLinkedList<T> {
      * @return value of element at index
      */
     public T get(int index) {
-        if(index == 0){
+        if (index > size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (index == 0) {
             return head.getValue();
         }
         Link<T> newLink = head;
@@ -76,8 +79,29 @@ public class SinglyLinkedList<T> {
      * @param number value to be searched
      * @return Index of 'number' if it's in the list, otherwise -1;
      */
-    public int indexOf(int number) {
-        return 0;
+
+    public int indexOf(T number) {
+        Link<T> cica = head;
+        int counter = 0;
+        while (cica != null) {
+            System.out.println(cica.getValue() + " | " + number);
+            if(cica.getValue() == number)
+                return counter;
+            cica = cica.getNext();
+            counter++;
+        }
+        return -1;
+    }
+
+    public Link<T> getNode(int pos) {
+        if (head == null) {
+            throw new IllegalArgumentException("Pocição não existe!");
+        }
+        Link<T> atual = head;
+        for (int i = 0; i < pos; i++) {
+            atual = atual.getNext(); // Pega a posição atual (ou seja a posição POS)
+        }
+        return atual;
     }
 
     /**
@@ -86,7 +110,26 @@ public class SinglyLinkedList<T> {
      * @param index  Position of the new element
      * @param number Value to be inserted.
      */
-    public void insert(int index, int number) {
+    public void insert(int index, T number) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        Link<T> node = new Link<>(number);
+        if (head == null) {
+            head = node;
+        } else {
+            Link<T> atual = getNode(index);
+            if (atual == head) {
+                Link<T> tmp = head;
+                head = node;
+                head.setNext(tmp);
+            } else {
+                Link<T> anterior = getNode(index - 1);
+                Link<T> proxima = anterior.getNext();
+                anterior.setNext(node);
+                node.setNext(proxima);
+            }
+        }
     }
 
     /**
@@ -95,7 +138,13 @@ public class SinglyLinkedList<T> {
      * @return Size of list.
      */
     public int size() {
-        return size;
+        Link<T> temp = head;
+        int count = 0;
+        while (temp != null) {
+            count++;
+            temp = temp.next;
+        }
+        return count;
     }
 
     /**
